@@ -1,4 +1,7 @@
-from tracemalloc import start
+
+from itertools import count
+import readline
+from typing import Text, Type
 import base58
 import time
 
@@ -115,8 +118,7 @@ def Compress(text):
     if len(Xor)>2:
       Xor = Xor[2:]
 
-    Comp.append(int(Xor))
-
+    Comp.append(int(Xor,16))
   """
   Se transforma los resultados de los XOR a string,
   para posterirmente transformarlo a Base58.
@@ -124,7 +126,11 @@ def Compress(text):
   Text = ""
 
   for i in Comp:
-    Hex = hex(i)
+    try:
+      Hex = hex(i)
+    except TypeError:
+      Hex = hex(int(i,16))
+
     Hex=Hex.split('x')
     Text+=(Hex[1])
 
@@ -139,6 +145,7 @@ while(True):
   print("Ingrese la opción que desea ejecutar: ")
   print("1 - Hash a un texto")
   print("2 - Hash a un archivo")
+  print("3 - Hash a un archivo linea por linea")
   print("0 - Finalizar programa")
 
   op = int(input("Opción "))
@@ -186,7 +193,7 @@ while(True):
     """
     BUF_SIZE = 100
     Hash=""
-    
+
     """Se lee el archivo"""
     with open(Path,'rb') as f:
       while True:
@@ -201,7 +208,7 @@ while(True):
           """
           data = str(base58.b58encode_check(data))
           Hash = Hash + Hashing(data)
-    
+  
     """
     Se comprime el Hash resultante con el finde que el resultado
     sea de 60 caracteres.
@@ -214,3 +221,41 @@ while(True):
     print("-----------------------------------------------------")
     print("Tiempo de ejecucion: ",ExecutionTime,"s")
     print("-----------------------------------------------------")
+  
+  """Si la opcion es igual a 3, entonces se necesita Hashear un archivo linea por linea"""  
+  if op==3:
+    Path = input("Ingrese la ruta del archivo: ")
+    Rows = int(input("Ingrese la cantidad de iteraciones: "))
+
+    """
+    Para Hashear al archivo, se leeran cada linea.
+    """
+    Hash=""
+    count=0
+    """Se lee el archivo"""
+    with open(Path) as file:
+      for line in file:
+          if count==Rows:
+            break
+          StarTime=time.time()
+          """
+          Se verifica la longitud del string ingresado,
+          para extenderlo o acortarlo.
+          """
+          if len(line)<55:
+            Text = Extend(line[:-1])
+          elif len(line)>55:
+            Text = Compress(line[:-1])
+
+          """Se le realiza el Hash al string ingresado."""
+          
+          Hash=Hashing(Text)
+          ExecutionTime=time.time() - StarTime
+          print("-----------------------------------------------------")
+          print("Linea: ",line)
+          print("-----------------------------------------------------")
+          print("Hash: ",Hash)
+          print("-----------------------------------------------------")
+          print("Tiempo de ejecucion: ",ExecutionTime,"s")
+          print("-----------------------------------------------------")
+          count+=1
