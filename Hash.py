@@ -21,7 +21,7 @@ def HexToB58(HexString):
 def Hashing(text):
   
   """Se transforma de ASCII a Hex para realizar el XOR"""
-  KeyHex = text.encode('utf-8').hex()
+  KeyHex = text.encode().hex()
   DigKey = list(KeyHex)
 
   """
@@ -65,7 +65,6 @@ def Extend(text):
   invertida, alternando cada vez que se termine de recorrer el string.
   En caso que sea mayor, todavia no se encuentra implementado.
   """
-  print("Extendiendo...")
   if len(text)<=55:
     i=0
     rev=0
@@ -82,12 +81,11 @@ def Extend(text):
 
 """Funcion que Comprime un String"""
 def Compress(text):
-  print("Compriminendo...")
   """
   Se transforma el string ingresado a Hex con el fin de
   poder realizar un XOR entre sus caracteres.
   """
-  KeyHex = text.encode('utf-8').hex()
+  KeyHex = text.encode().hex()
   DigKey = list(KeyHex)
 
   Comp=[]
