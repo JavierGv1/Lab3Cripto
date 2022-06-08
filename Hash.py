@@ -1,7 +1,3 @@
-
-from itertools import count
-import readline
-from typing import Text, Type
 import base58
 import time
 
@@ -214,6 +210,7 @@ while(True):
     sea de 60 caracteres.
     """
     Hash = Compress(Hash)
+    Hash = Hashing(Hash)
     ExecutionTime=time.time() - StarTime
 
     print("-----------------------------------------------------")
@@ -237,15 +234,16 @@ while(True):
       for line in file:
           if count==Rows:
             break
+          line=line[:-1]
           StarTime=time.time()
           """
           Se verifica la longitud del string ingresado,
           para extenderlo o acortarlo.
           """
           if len(line)<55:
-            Text = Extend(line[:-1])
+            Text = Extend(line)
           elif len(line)>55:
-            Text = Compress(line[:-1])
+            Text = Compress(line)
 
           """Se le realiza el Hash al string ingresado."""
           
