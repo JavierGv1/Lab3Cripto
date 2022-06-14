@@ -1,5 +1,6 @@
 import base58
 import time
+import math
 
 """Funcion que transforma de Hexadecimal a Base58"""
 def HexToB58(HexString):
@@ -140,6 +141,7 @@ while(True):
   print("1 - Hash a un texto")
   print("2 - Hash a un archivo")
   print("3 - Hash a un archivo linea por linea")
+  print("4 - Entropia de un texto")
   print("0 - Finalizar programa")
 
   op = int(input("Opción "))
@@ -185,7 +187,7 @@ while(True):
     Para Hashear al archivo, se leeran cada 100 bytes
     con el fin de optimizar la memoria.
     """
-    BUF_SIZE = 100
+    BUF_SIZE = 32*1024
     Hash=""
 
     """Se lee el archivo"""
@@ -201,14 +203,12 @@ while(True):
           Posteriormente se realiza el Hash.
           """
           data = str(base58.b58encode_check(data))
-          Hash = Hash + Hashing(data)
+          Hash = Hashing(Hash + data)
   
     """
     Se comprime el Hash resultante con el finde que el resultado
     sea de 60 caracteres.
     """
-    Hash = Compress(Hash)
-    Hash = Hashing(Hash)
     ExecutionTime=time.time() - StarTime
 
     print("-----------------------------------------------------")
@@ -233,7 +233,7 @@ while(True):
           if count==Rows:
             break
           line=line[:-1]
-          StarTime=time.time()
+          LineTime=time.time()
           """
           Se verifica la longitud del string ingresado,
           para extenderlo o acortarlo.
@@ -246,7 +246,7 @@ while(True):
           """Se le realiza el Hash al string ingresado."""
           
           Hash=Hashing(Text)
-          ExecutionTime=time.time() - StarTime
+          ExecutionTime=time.time() - LineTime
           print("-----------------------------------------------------")
           print("Linea: ",line)
           print("-----------------------------------------------------")
@@ -255,3 +255,30 @@ while(True):
           print("Tiempo de ejecucion: ",ExecutionTime,"s")
           print("-----------------------------------------------------")
           count+=1
+  
+  """Si la opcion es igual a 4, se busca calcular la entropia de un string"""
+  if op==4:
+    text = input("Ingrese el texto: ")
+    StarTime=time.time()
+
+    """Se lista el texto ingresado, eliminando los elementos repetidos."""
+    BaseText = list(dict.fromkeys(text))
+
+    """Se obtiene el largo, la base y se calcula la entropia del string."""
+    Len = len(text)
+    Base = len(BaseText)
+    H = Len*math.log2(Base)
+
+    ExecutionTime=time.time() - StarTime
+
+    print("-----------------------------------------------------")
+    print("Base: ",Base)
+    print("Largo: ",Len)
+    print("Entropia: ",H)
+    print("-----------------------------------------------------")
+    print("Tiempo de ejecucion: ",ExecutionTime,"s")
+    print("-----------------------------------------------------")
+
+  else:
+    print("Opcion incorrecta.")
+    print("-----------------------------------------------------")
