@@ -27,7 +27,7 @@ Laboratorio 3: Criptografia y seguridad en redes
 - En la siguientes tablas se puede observar el rendimiento de este algoritmo de Hash y el de otros.
 
 ### Comparativa con un string
-- Para realizar esta comparativa, se utilizo el string `ColoColoLoMasGrande`.[^bignote]
+- Para realizar esta comparativa, se utilizo el string `ColoColoLoMasGrande`.
 
 |            | **LARGO** | **BASE** | **ENTROPIA** | **RENDIMIENTO (MS)** |
 |------------|-----------|----------|--------------|----------------------|
