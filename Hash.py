@@ -20,7 +20,7 @@ def HexToB58(HexString):
 
 """Funcion que realiza el Hash"""
 def Hashing(text):
-  
+  print("Hashing...")
   """Se transforma de ASCII a Hex para realizar el XOR"""
   KeyHex = text.encode().hex()
   DigKey = list(KeyHex)
@@ -58,6 +58,7 @@ def Hashing(text):
   
 """Funcion que Extiende un String"""
 def Extend(text):
+  print("Extendiendo...")
   """
   En caso de ser menor que 55 caracteres, ya que en con esta 
   cantidad de caracteres, el Hash posee un largo entre 60 
@@ -82,6 +83,7 @@ def Extend(text):
 
 """Funcion que Comprime un String"""
 def Compress(text):
+  print("Comprimiendo...")
   """
   Se transforma el string ingresado a Hex con el fin de
   poder realizar un XOR entre sus caracteres.
@@ -131,7 +133,7 @@ def Compress(text):
 
   Text = HexToB58(Text)
 
-  return Text
+  return Text[:60]
 
 print("-----------------------------------------------------")
 
@@ -153,8 +155,8 @@ while(True):
     print("-----------------------------------------------------")
     break
 
-  """Si la opcion es igual a 1, entonces se necesita Hashear un string"""
-  if(op==1):
+  #Si la opcion es igual a 1, entonces se necesita Hashear un string
+  elif op==1:
     text = input("Ingrese el texto: ")
     StarTime=time.time()
 
@@ -178,8 +180,8 @@ while(True):
     print("Tiempo de ejecucion: ",ExecutionTime,"s")
     print("-----------------------------------------------------")
 
-  """Si la opcion es igual a 2, entonces se necesita Hashear un archivo"""
-  if op==2:
+  #Si la opcion es igual a 2, entonces se necesita Hashear un archivo
+  elif op==2:
     Path = input("Ingrese la ruta del archivo: ")
     StarTime=time.time()
 
@@ -187,7 +189,7 @@ while(True):
     Para Hashear al archivo, se leeran cada 100 bytes
     con el fin de optimizar la memoria.
     """
-    BUF_SIZE = 32*1024
+    BUF_SIZE = 1024
     Hash=""
 
     """Se lee el archivo"""
@@ -203,8 +205,10 @@ while(True):
           Posteriormente se realiza el Hash.
           """
           data = str(base58.b58encode_check(data))
-          Hash = Hashing(Hash + data)
-  
+          Hash += Hashing(data)
+
+    Hash = Compress(Hash)
+
     """
     Se comprime el Hash resultante con el finde que el resultado
     sea de 60 caracteres.
@@ -217,8 +221,8 @@ while(True):
     print("Tiempo de ejecucion: ",ExecutionTime,"s")
     print("-----------------------------------------------------")
   
-  """Si la opcion es igual a 3, entonces se necesita Hashear un archivo linea por linea"""  
-  if op==3:
+  #Si la opcion es igual a 3, entonces se necesita Hashear un archivo linea por linea  
+  elif op==3:
     Path = input("Ingrese la ruta del archivo: ")
     Rows = int(input("Ingrese la cantidad de iteraciones: "))
 
@@ -256,10 +260,9 @@ while(True):
           print("-----------------------------------------------------")
           count+=1
   
-  """Si la opcion es igual a 4, se busca calcular la entropia de un string"""
-  if op==4:
+  #Si la opcion es igual a 4, se busca calcular la entropia de un string
+  elif op==4:
     text = input("Ingrese el texto: ")
-    StarTime=time.time()
 
     """Se lista el texto ingresado, eliminando los elementos repetidos."""
     BaseText = list(dict.fromkeys(text))
@@ -267,16 +270,12 @@ while(True):
     """Se obtiene el largo, la base y se calcula la entropia del string."""
     Len = len(text)
     Base = len(BaseText)
-    H = Len*math.log2(Base)
-
-    ExecutionTime=time.time() - StarTime
+    H = math.ceil(Len*math.log2(Base))
 
     print("-----------------------------------------------------")
     print("Base: ",Base)
     print("Largo: ",Len)
     print("Entropia: ",H)
-    print("-----------------------------------------------------")
-    print("Tiempo de ejecucion: ",ExecutionTime,"s")
     print("-----------------------------------------------------")
 
   else:
